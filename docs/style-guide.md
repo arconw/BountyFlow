@@ -1,97 +1,104 @@
-# Гайд по стилям и компонентам BountyBoard
+# BountyFlow style and component guide
 
-## Где менять оформление
+## Where to change the design
 
-Единая точка настройки — `src/styles/tokens.css`. Компоненты используют семантические CSS-переменные; визуальные правила сгруппированы по областям интерфейса.
+`src/styles/tokens.css` is the central configuration point. Components use semantic CSS variables, and visual rules are grouped by interface area.
 
-| Файл                | Ответственность                                                             |
-| ------------------- | --------------------------------------------------------------------------- |
-| `tokens.css`        | Палитра, шрифты, типографическая шкала, отступы, радиусы, размеры, анимации |
-| `base.css`          | Сброс, общие контролы, кнопки, фокус, адреса, пустые состояния              |
-| `layout.css`        | Шапка, навигация, контейнер, подвал, предупреждение о сети                  |
-| `board.css`         | Композиция списка, сетка, блок под списком                                  |
-| `board-intro.css`   | Вступление, схема escrow и статистика                                       |
-| `board-filters.css` | Поиск, фильтры, сортировка и переключение вида                              |
-| `bounty-card.css`   | Карточки, бейджи, авторы и отображение списком                              |
-| `bounty.css`        | Детали задачи, требования, панель награды, мобильное действие               |
-| `create.css`        | Форма, подсказки, сумма транзакции                                          |
-| `dialogs.css`       | Диалоги кошелька, транзакций и ревью                                        |
+| File                | Responsibility                                                             |
+| ------------------- | -------------------------------------------------------------------------- |
+| `tokens.css`        | Palette, fonts, type scale, spacing, radii, dimensions, animation settings |
+| `base.css`          | Reset, shared controls, buttons, focus, addresses, empty states            |
+| `layout.css`        | Header, navigation, container, footer, network notice                      |
+| `board.css`         | Board layout, grid, section below the list                                 |
+| `board-intro.css`   | Introduction, escrow diagram, statistics                                   |
+| `board-filters.css` | Search, filters, sorting, view switch                                      |
+| `bounty-card.css`   | Cards, badges, authors, list view                                          |
+| `bounty.css`        | Bounty details, requirements, reward panel, mobile action                  |
+| `create.css`        | Form, guidance, transaction summary                                        |
+| `dialogs.css`       | Wallet and transaction dialogs                                             |
+| `status.css`        | Status colors and indicators                                               |
+| `motion.css`        | Border shimmer, hover highlights, status and button effects                |
+| `escrow-motion.css` | Escrow diagram icon and halo pulses                                        |
+| `themes.css`        | Light-theme semantic palette                                               |
+| `profile.css`       | Profile and appearance settings, loading, transaction notices              |
+| `skills.css`        | Shared skill picker                                                        |
+| `auth.css`          | Account forms and security settings                                        |
 
-`src/app/globals.css` задаёт порядок подключения. Не меняйте порядок для исправления локальной ошибки: исправляйте соответствующий селектор.
+`src/app/globals.css` defines import order. Fix the relevant selector when addressing a local styling issue; keep the import order stable.
 
-## Быстрые настройки
+## Quick adjustments
 
-Для изменения акцента замените вместе `--color-accent`, `--color-accent-hover`, `--color-accent-subtle`, `--color-on-accent`. Текст на акцентной кнопке должен сохранять читаемый контраст.
+Change `--color-accent`, `--color-accent-hover`, `--color-accent-subtle`, and `--color-on-accent` together. Text on accent buttons must retain readable contrast.
 
-Для более плотного интерфейса уменьшите `--card-padding`, `--grid-gap`, `--control-height`. Для изменения ширины макета используйте `--container-width`, `--page-gutter`, `--aside-width`.
+For a denser interface, reduce `--card-padding`, `--grid-gap`, and `--control-height`. Change `--container-width`, `--page-gutter`, and `--aside-width` to adjust layout width.
 
-Для другой типографики замените импорты локальных шрифтов в `src/app/layout.tsx` и семейства `--font-sans`, `--font-mono`. Размеры текста задаются `--text-*`, начертания — `--weight-*`, интерлиньяж — `--leading-*`. Брендовые и крупные размеры дополнительно вынесены в семантические токены.
+To change typography, update the local font imports in `src/app/layout.tsx` and the `--font-sans` and `--font-mono` families. Text sizes use `--text-*`, weights use `--weight-*`, and line heights use `--leading-*`. Brand and display sizes have additional semantic tokens.
 
-Размеры экранов записаны непосредственно в media queries, поскольку CSS custom properties не работают в условиях обычного `@media`. Основные переходы: 1050px для сетки, 760px для мобильной компоновки, 590px для одной колонки. 420px используется для узких экранов. При изменении переходов проверяйте ширины 390, 768 и 1440px.
+Breakpoints are written directly in media queries because CSS custom properties do not work in ordinary `@media` conditions. The main transitions are 1050px for the grid, 760px for the mobile layout, and 590px for a single column. Narrow screens also use 420px. Check widths of 390, 768, and 1440px when changing breakpoints.
 
-## Правила визуального языка
+## Visual conventions
 
-- Фон страницы, поверхность карточки и приподнятый контрол — разные семантические роли. Используйте соответствующие переменные, а не дополнительные оттенки в компоненте.
-- Акцент предназначен для главного действия, активного состояния и escrow. Статусы имеют отдельные пары текста и фона.
-- У каждой карточки последовательность: статус и номер, название, описание, навыки, награда, автор и время.
-- Manrope Variable — основной шрифт. Geist Mono используется для идентификаторов и адресов.
-- Кнопка основного действия — `Button` с `variant="primary"`. Ссылки навигации остаются ссылками, даже когда выглядят как кнопки.
-- Скругления `xs/sm` — бейджи и контролы, `md/lg` — карточки и панели, `xl` — диалоги.
-- Статус всегда передаётся текстом и цветом одновременно.
-- Взаимодействия короткие, через `--duration-fast` и `--duration-normal`. Учитывается `prefers-reduced-motion`.
-- Не используйте inline-стили для оформления, `!important` для локальных правок или селекторы по вложенности страницы. Исключения: глобальное отключение движения по предпочтению пользователя, вычисляемые Motion трансформации и координаты курсора в CSS-переменных. Цвета, размеры и декоративные правила остаются в CSS.
+- Page backgrounds, card surfaces, and elevated controls have separate semantic roles. Use the corresponding variables.
+- The accent identifies primary actions, active states, and escrow. Statuses have separate text/background pairs.
+- Cards follow this order: status and ID, title, description, skills, reward, author, and time.
+- Manrope Variable is the main typeface. Geist Mono is used for identifiers and addresses.
+- Primary actions use `Button` with `variant="primary"`. Navigation remains a link even when styled as a button.
+- Radius sizes `xs/sm` apply to badges and controls, `md/lg` to cards and panels, and `xl` to dialogs.
+- Status is always conveyed through both text and color.
+- Interactions use `--duration-fast` and `--duration-normal` and respect `prefers-reduced-motion`.
+- Keep colors, dimensions, and decorative rules in CSS. Inline values are reserved for computed Motion transforms and cursor coordinates in CSS variables. Avoid `!important` for local fixes; the global reduced-motion override is an exception. Keep selectors scoped to components.
 
-## Структура компонентов
+## Component structure
 
-`src/app` содержит маршруты и композицию. В нём не должно быть массивов демонстрационных задач, реквизитов кошельков или больших компонентов интерфейса.
+`src/app` contains routes and page composition. Demo task arrays, wallet fixtures, and large interface components belong in their dedicated modules.
 
-`src/components/ui` — общие примитивы: кнопка, доступный диалог, адрес, пустое состояние. `layout` — оболочка приложения. `board`, `bounty`, `create`, `wallet` — компоненты соответствующих экранов. `review` — изолированный слой предпросмотра состояний.
+`src/components/ui` contains shared primitives: buttons, accessible dialogs, addresses, and empty states. `layout` provides the application shell. `board`, `bounty`, `create`, `profile`, `auth`, and `wallet` contain components for their respective areas. The separate `demo/components` directory composes the static showcase from shared presentation components and demo controls.
 
-Для новых элементов сначала переиспользуйте `Button`, `Modal`, `StatusBadge`, `BountyCard` и `TransactionSummary`. Отдельный компонент нужен, когда у элемента своя роль, собственное состояние или он повторяется. Не создавайте новый вариант целой карточки ради изменения одного поля.
+Reuse `Button`, `Modal`, `StatusBadge`, `BountyCard`, and `TransactionSummary` first. Extract a component when it has its own role, owns state, or is reused. Extend the existing card composition for changes to individual fields.
 
-## Демонстрационные данные
+## Sample data and interface content
 
-Демонстрационные аккаунты и задания находятся в `prisma/fixtures` и загружаются в БД. В `src/content` находятся варианты фильтров, ключи подсказок формы и тексты состояний транзакции. Типы предметной области находятся в `src/types`. Статичные подписи интерфейса находятся в `public/locales/*.json`; компоненты используют ключи next-intl. Подписи, ошибки, aria-label и placeholders должны переводиться.
+Sample accounts and bounties live in `prisma/fixtures` and are seeded into the database. `src/content` holds filter options, form-guidance keys, transaction-state content, and the curated skill catalog. Domain types live in `src/types`. Static interface labels belong in `public/locales/*.json`; components access them through next-intl keys. Labels, errors, aria-labels, and placeholders must be translated.
 
-Чтобы сменить демонабор, редактируйте файлы `prisma/fixtures` и выполните `npm run demo:seed`, а не JSX компонентов. Рабочая статистика вычисляется из каталога; суммы вычисляются в wei через bigint.
+To change the local sample dataset, edit `prisma/fixtures` and run `npm run demo:seed` to deploy a fresh local contract and seed the database. Board statistics come from the catalog, and amounts are calculated in wei using bigint.
 
-`ReviewProvider` хранит только временные состояния интерфейса. Последовательность транзакции переключается вручную для ревью; завершение не создаёт задачи, не меняет fixtures и не отправляет запросы. Рабочие операции находятся отдельно в `TransactionProvider`, `src/hooks` и `src/components/transactions`; preview не вызывает их.
+The static showcase keeps its fixtures in `demo/fixtures` and browser-local state in `demo/state`. Simulated transactions validate role permissions and update only that browser's demo data. Application transactions use `TransactionProvider`, `src/hooks`, and `src/components/transactions`; the static showcase does not invoke them.
 
-## Доступность и проверка
+## Accessibility and verification
 
-Новые контролы должны иметь видимую подпись либо `aria-label`. В диалогах используется нативный `<dialog>`: фокус остаётся внутри, Escape закрывает, после закрытия фокус возвращается. Состояния выбора отражаются через `aria-pressed`. Ошибки формы должны быть связаны с полем через `aria-describedby`.
+New controls need a visible label or `aria-label`. Dialogs use native `<dialog>`: focus stays inside, Escape closes the dialog, and closing restores the previous focus. Selection state uses `aria-pressed`. Form errors must be associated with their fields through `aria-describedby`.
 
-Перед сдачей: `npm run typecheck`, `npm run build`, `npm run test:e2e`, `npm run format:check`. Визуально проверьте список, детали, форму и диалоги на desktop/mobile. Для проверки отключённой анимации используйте системное предпочтение reduced motion.
+Run `npm run typecheck`, `npm run build`, `npm run test:e2e`, and `npm run format:check`. Visually check the board, details, forms, and dialogs on desktop and mobile. Use the operating system's reduced-motion preference to check the static presentation.
 
-## Анимации и переливы
+## Animation and shimmer
 
-- `src/components/board/animated-bounty-grid.tsx` отвечает за появление, уход и перемещение карточек. Использует стабильные ID задач, Motion layout и AnimatePresence с popLayout. Уходящие элементы временно получают inert и aria-hidden.
-- `src/components/layout/main-nav.tsx` содержит общую линию активного пункта. Она перемещается только при смене страницы, включая историю браузера. Наведение и клавиатурный фокус не меняют положение линии.
-- `src/styles/motion.css` содержит перелив границ, подсветку поверхности, пульсацию точек статуса, световой поток escrow и блик кнопок. Статусы вынесены в `src/styles/status.css`.
-- `src/components/ui/use-pointer-glow.ts` передаёт координаты курсора через `--pointer-x/y` не чаще одного кадра; React не перерисовывает карточку при каждом движении мыши.
+- `src/components/board/animated-bounty-grid.tsx` handles card entry, exit, and rearrangement with stable bounty IDs, Motion layout, and `AnimatePresence` in `popLayout` mode. Exiting elements temporarily receive `inert` and `aria-hidden`.
+- `src/components/layout/main-nav.tsx` owns the shared active-tab indicator. It moves only on route changes, including browser history navigation. Hover and keyboard focus leave its position unchanged.
+- `src/styles/motion.css` defines border shimmer, surface highlights, status-dot pulses, escrow light flow, and button shine. Status styling is in `src/styles/status.css`.
+- `src/components/ui/use-pointer-glow.ts` updates `--pointer-x/y` at most once per frame without rerendering the card on every pointer movement.
 
-Настройки CSS находятся в `tokens.css`: `--duration-border-orbit`, `--duration-status-pulse`, `--duration-status-completed`, `--duration-hover`, `--duration-button-shine`, `--card-hover-lift`, `--card-spotlight-size`, `--color-card-spotlight`, `--color-border-shimmer`. Значения цветов связаны с основной палитрой через color-mix.
+CSS settings live in `tokens.css`: `--duration-border-orbit`, `--duration-status-pulse`, `--duration-status-completed`, `--duration-hover`, `--duration-button-shine`, `--card-hover-lift`, `--card-spotlight-size`, `--color-card-spotlight`, and `--color-border-shimmer`. Effect colors derive from the main palette through `color-mix`.
 
-Параметры Motion вынесены отдельно в `src/lib/motion.ts`: длительности появления/ухода/перемещения, шаг задержки, максимальная задержка и смещение появления. Времена Motion задаются в секундах. Не назначайте CSS transform или transition: all обёртке `.bounty-grid-item`: её трансформациями управляет Motion. Эффект подъёма при наведении применяется к вложенной карточке.
+Motion settings live in `src/lib/motion.ts`: entry, exit, and layout durations, stagger interval, maximum delay, and entry offset. Motion timings use seconds. Motion owns the transforms of `.bounty-grid-item`; do not apply CSS transforms or `transition: all` to that wrapper. Hover lift applies to the nested card.
 
-Текст статуса всегда остаётся читаемым: пульсирует точка, а не подпись. Cancelled статичен. Перелив границы работает только при наведении мышью или клавиатурном фокусе. При `prefers-reduced-motion: reduce` отключаются циклические эффекты и перемещение сетки; фильтры продолжают работать.
+Status labels remain readable while their dots pulse. Cancelled status is static. Border shimmer runs only on hover or keyboard focus. `prefers-reduced-motion: reduce` disables looping effects and grid movement while preserving filtering.
 
-Основа реализации: [Motion layout](https://motion.dev/docs/react-layout-animations), [AnimatePresence](https://motion.dev/docs/react-animate-presence).
+References: [Motion layout](https://motion.dev/docs/react-layout-animations), [AnimatePresence](https://motion.dev/docs/react-animate-presence).
 
-## Шрифт и пульсация схемы
+## Typography and diagram motion
 
-Основной шрифт — [Manrope](https://fontsource.org/fonts/manrope), локальный variable-пакет `@fontsource-variable/manrope`. Подключение находится в `src/app/layout.tsx`, семейство — в `--font-sans`. Адреса и идентификаторы используют Geist Mono. Во время просмотра шрифты загружаются с сервера проекта, а не из Google Fonts.
+The main typeface is [Manrope](https://fontsource.org/fonts/manrope), bundled through `@fontsource-variable/manrope`. Its imports live in `src/app/layout.tsx`, and the family is configured in `--font-sans`. Addresses and identifiers use Geist Mono. Fonts are served by the application itself.
 
-`src/styles/escrow-motion.css` управляет пульсацией трёх иконок и тонкого контура вокруг каждой. Анимация меняет только масштаб SVG и прозрачность, не затрагивая размеры блоков или соединительных линий. Значения `--duration-escrow-pulse`, `--escrow-icon-pulse-scale`, `--escrow-icon-rest-opacity`, `--escrow-halo-scale`, `--escrow-halo-opacity` находятся в `tokens.css`. Фазы смещены на треть периода. Reduced motion отключает пульсацию полностью.
+`src/styles/escrow-motion.css` controls the three icon pulses and the thin halo around each icon. Animation changes SVG scale and opacity without affecting block dimensions or connecting lines. `--duration-escrow-pulse`, `--escrow-icon-pulse-scale`, `--escrow-icon-rest-opacity`, `--escrow-halo-scale`, and `--escrow-halo-opacity` live in `tokens.css`. Phases are offset by one third of a cycle. Reduced motion disables the pulse completely.
 
-Линия навигации — постоянный элемент внутри `.main-nav`, привязанный к нижнему краю. Измеряются только `offsetLeft` и ширина активной ссылки относительно nav; анимируются только горизонтальное смещение и ширина. Это исключает вертикальное движение при сбросе прокрутки и загрузке страницы. ResizeObserver обновляет геометрию при загрузке шрифта и изменении ширины экрана. Скорость задаёт `--duration-navigation`. Начальное позиционирование выполняется без анимации.
+The navigation indicator is a persistent element anchored to the bottom of `.main-nav`. Measurements use the active link's `offsetLeft` and width relative to the navigation element; only horizontal position and width animate. This prevents vertical movement during scroll resets and page loading. `ResizeObserver` updates geometry when fonts load or viewport width changes. `--duration-navigation` controls speed. Initial positioning is not animated.
 
-Общий масштаб текста регулируется `--type-scale` (текущее значение `1.15`, увеличение на 15%). Он влияет на шкалу `--text-*`, включая заголовки, но не увеличивает отступы и размеры контейнеров.
+`--type-scale` controls the overall text scale. Its current value is `1.15`, a 15% increase. It affects `--text-*` sizes, including headings, without enlarging spacing or containers.
 
-## Темы и язык
+## Themes and language
 
-`themes.css` переопределяет семантическую палитру под `[data-theme="light"]`; базовая палитра — тёмная. Переключение выполняет next-themes. Новые цвета добавляйте в обе палитры, включая цвета текста, статусов и границ. Не привязывайте визуальные правила к конкретному языку.
+`themes.css` overrides semantic colors under `[data-theme="light"]`; the default palette is dark. next-themes handles switching. Add new colors to both palettes, including text, status, and border colors. Visual rules should work across all languages.
 
-`profile.css` содержит настройки, личный кабинет, загрузку и уведомление о транзакции. Длинные переводы проверяйте на ширине 390px: немецкий, французский и русский часто требуют больше места. Native-названия языков оставляйте в `src/i18n/config.ts`. ICU plural используется для счётчиков; не собирайте предложения из переведённых кусочков.
+`profile.css` covers account settings, loading states, and transaction notices. Check long translations at 390px: German, French, and Russian often need more space. Keep native language names in `src/i18n/config.ts`. Counters use ICU plurals; translate complete messages rather than joining translated fragments.
 
-Валидация и сценарии формы вынесены в `src/hooks`; схемы входных данных — в `src/lib`. Формы показывают переводимые ошибки вместо системных сообщений браузера.
+Form validation and flows live in `src/hooks`, with input schemas in `src/lib`. Forms display translated errors instead of browser-native validation messages.

@@ -79,31 +79,28 @@ await page.screenshot({
   fullPage: true,
   animations: "disabled",
 });
-await page.locator("#language").selectOption("ru");
-await expect(page.locator("html")).toHaveAttribute("lang", "ru");
-await page.screenshot({
-  path: "docs/screenshots/preferences-light-ru.png",
-  fullPage: true,
-});
 await page.setViewportSize({ width: 390, height: 1000 });
 await page.screenshot({
-  path: "docs/screenshots/preferences-mobile-ru.png",
+  path: "docs/screenshots/preferences-mobile-en.png",
   fullPage: true,
+  animations: "disabled",
 });
-await page.getByRole("button", { name: "Выйти", exact: true }).click();
+await page.getByRole("button", { name: "Sign out", exact: true }).click();
 await page.locator(".auth-page input[name=identifier]").waitFor();
 await page.screenshot({
-  path: "docs/screenshots/login-mobile-ru.png",
+  path: "docs/screenshots/login-mobile-en.png",
   fullPage: true,
+  animations: "disabled",
 });
 await page
   .locator(".auth-links")
-  .getByRole("link", { name: "Создать аккаунт" })
+  .getByRole("link", { name: "Create account", exact: true })
   .click();
 await page.locator("input[name=username]").waitFor();
 await page.screenshot({
-  path: "docs/screenshots/register-mobile-ru.png",
+  path: "docs/screenshots/register-mobile-en.png",
   fullPage: true,
+  animations: "disabled",
 });
 process.stdout.write(
   JSON.stringify({ browser: "headed Chromium in WSL", issues }) + "\n",

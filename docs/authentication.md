@@ -1,43 +1,43 @@
-# Аккаунты и безопасность
+# Accounts and security
 
-Аккаунт создаётся только по email или через Google. Email обязателен в обоих случаях. Уникальный публичный логин содержит 3–30 латинских букв, цифр, точек и подчёркиваний; регистр при входе не важен. Google-пользователь выбирает логин в профиле. Для операций bounty нужны логин и привязанный кошелёк.
+Accounts are created through email registration or Google. Both require an email address. A unique public username contains 3–30 Latin letters, digits, periods, or underscores; sign-in is case-insensitive. Google users choose their username in the profile. Bounty operations require a username and a linked wallet.
 
-## Сценарии
+## Account flows
 
-- `/register`: email, логин, пароль и подтверждение адреса по письму.
-- `/login`: email или логин + пароль либо Google OAuth.
-- `/recover`, `/reset-access`: одноразовая ссылка восстановления; смена пароля отзывает прежние сессии.
-- `/two-factor`: TOTP или одноразовый резервный код. До проверки нет действующей сессии.
-- `/profile`: публичный профиль, логин, установка/смена пароля, добровольная 2FA и список кошельков.
+- `/register`: email, username, password, and email verification.
+- `/login`: email or username and password, or Google OAuth.
+- `/recover`, `/reset-access`: a single-use recovery link; resetting a password revokes existing sessions.
+- `/two-factor`: TOTP or a single-use recovery code. No authenticated session is available until verification succeeds.
+- `/profile`: public profile, username, password setup or changes, optional 2FA, and linked wallets.
 
-Google не создаёт пароль автоматически. Его можно задать после недавнего входа. Совпадающие подтверждённые email относятся к одному аккаунту; неподтверждённый email автоматически не объединяется. Включённая TOTP проверяется и после Google callback. Прямой ID-token вход заблокирован: используется OAuth redirect с state и PKCE.
+Google does not create a password automatically. A user can set one after a recent sign-in. Matching verified email addresses belong to the same account; an unverified email is not linked automatically. Enabled TOTP is also enforced after the Google callback. Direct ID-token sign-in is disabled; the application uses an OAuth redirect with state and PKCE.
 
-Резервные коды показываются при настройке, каждый одноразовый. QR формируется локально в браузере. 2FA включается после подтверждения кода из приложения. Для её изменения и установки первого пароля требуется вход не старше 15 минут; для аккаунта с паролем также проверяется текущий пароль.
+Recovery codes are shown during setup, and each code can be used once. The QR code is generated locally in the browser. 2FA becomes active after confirmation with an authenticator code. Changes to 2FA and initial password setup require a session authenticated within the last 15 minutes; accounts with a password must also confirm their current password.
 
-Гостю не показываются вкладки профиля и личных заданий. Прямые запросы `/profile`, `/my-bounties` и `/create` проверяются на сервере и перенаправляются на вход. Язык и тема находятся в настройках `/profile` после входа. Действие в публичном задании сначала требует входа, после него — подключённый и привязанный кошелёк.
+Guests do not see profile or personal-bounty navigation. Requests to `/profile`, `/my-bounties`, and `/create` are checked on the server and redirect guests to sign-in. Language and theme controls are in `/profile` after sign-in. Taking an action on a public bounty requires an account, followed by a connected, linked wallet.
 
-## Кошельки и история
+## Wallets and history
 
-Кошельки не участвуют во входе, регистрации и восстановлении. Подпись одноразового сообщения лишь привязывает адрес к авторизованному аккаунту. Можно привязать несколько адресов. Disconnect не завершает сессию.
+Wallets do not participate in sign-in, registration, or account recovery. Signing a single-use message links an address to an authenticated account. An account can link multiple addresses. Disconnecting a wallet does not end the account session.
 
-Публичные карточки показывают логин. Адреса остаются в настройках кошельков и технических деталях операций. Смена кошелька не переносит полномочия автора и получателя выплаты в уже созданном контракте.
+Public cards display usernames. Addresses appear in wallet settings and transaction details. Changing wallets does not transfer creator permissions or payout rights for an existing on-chain bounty.
 
-Миграция не удаляет старые профили и историю. Прежние кошельковые сессии больше не принимаются. При привязке старого адреса связи его заданий переходят к подтверждённому аккаунту; прежняя запись профиля сохраняется в БД. Разные зарегистрированные аккаунты автоматически не объединяются.
+The account migration preserves older profiles and history. Legacy wallet sessions are no longer accepted. Linking an older address associates its bounties with the verified account while retaining the previous profile record in the database. Separate registered accounts are never merged automatically.
 
-## Внешние сервисы
+## External services
 
-SMTP: `SMTP_HOST`, `SMTP_PORT` (587 по умолчанию), `SMTP_SECURE`, при необходимости `SMTP_USER`, `SMTP_PASSWORD`, отправитель `MAIL_FROM`. Транспорт и локализованные шаблоны отделены от auth-сценариев.
+SMTP configuration uses `SMTP_HOST`, `SMTP_PORT` (587 by default), `SMTP_SECURE`, optional `SMTP_USER` and `SMTP_PASSWORD`, and `MAIL_FROM`. Mail transport and localized templates are separate from authentication flows.
 
-Google: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, redirect URI `{APP_ORIGIN}/api/auth/callback/google`. На сервере нужны HTTPS `APP_ORIGIN` и постоянный `BETTER_AUTH_SECRET` длиной не менее 32 символов. Локально ключ создаётся в игнорируемом `data/auth-material.bin` с правами 0600 и не выводится в лог. Его нельзя удалять между запусками: он защищает cookies и настроенную 2FA.
+Google configuration uses `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and the redirect URI `{APP_ORIGIN}/api/auth/callback/google`. A public server requires an HTTPS `APP_ORIGIN` and a stable `BETTER_AUTH_SECRET` of at least 32 characters. Local development generates its key in the ignored `data/auth-material.bin` file with mode 0600 and never logs it. Keep this file between runs: it protects cookies and configured 2FA data.
 
-Без SMTP регистрация и восстановление отмечены как недоступные. Без Google-конфигурации соответствующая кнопка отключена с пояснением. Реальные доставка писем и вход Google проверяются после подключения сервисов.
+Without SMTP, registration and recovery are marked unavailable. Without Google configuration, the Google button is disabled with an explanation. Actual email delivery and Google sign-in must be verified after configuring those services.
 
-Localhost поддерживается Google OAuth. Для приложения на порту 3001 укажите `APP_ORIGIN=http://localhost:3001` и зарегистрируйте `http://localhost:3001/api/auth/callback/google` в Google Cloud. Для публичного origin обязательны HTTPS, постоянный ключ и `AUTH_TRUSTED_IP_HEADER` за прокси, который перезаписывает соответствующий заголовок. Подробности — в [гайде публикации](deployment.md).
+Google OAuth supports localhost. For an application on port 3001, set `APP_ORIGIN=http://localhost:3001` and register `http://localhost:3001/api/auth/callback/google` in Google Cloud. Public origins require HTTPS, a stable authentication key, and `AUTH_TRUSTED_IP_HEADER` behind a proxy that overwrites the selected header. See the [deployment guide](deployment.md).
 
-Лимиты входа сохраняются в SQLite и привязаны к аккаунту: email и username используют общий счётчик. Подмена `X-Forwarded-For` его не сбрасывает. Тело auth POST ограничено 32 КБ независимо от `Content-Length`. Конфигурация с одним из двух Google-параметров отклоняется при запуске.
+Sign-in limits persist in SQLite and are account-based: email and username attempts share one counter. Spoofing `X-Forwarded-For` does not reset it. Auth POST bodies are limited to 32 KB independently of `Content-Length`. Supplying only one of the two Google settings causes startup validation to fail.
 
-## Проверки
+## Verification
 
-Unit-тесты выполняют HTTP-сценарии Better Auth на временной SQLite: подтверждение email, вход по логину/email, неверный пароль, повтор reset-link, TOTP и recovery-code, Google callback без сессии до второго фактора, Google-аккаунт без пароля, свежесть сессии и запрет ID-token входа. Почта и обмен данными Google подменяются только внутри тестовой фабрики.
+Unit tests exercise Better Auth HTTP flows against temporary SQLite databases: email verification, email/username sign-in, incorrect passwords, recovery-link reuse, TOTP and recovery codes, Google callbacks without a session before the second factor, Google accounts without passwords, session freshness, and rejection of direct ID-token sign-in. Email delivery and Google exchanges are replaced only inside the test factory.
 
-Playwright проверяет формы, настройку TOTP и recovery-login, мультикошелёк без logout и полный create → accept → payout в локальной EVM. В сценариях с паролями и 2FA отключены trace и screenshots. Обходов авторизации в приложении нет.
+Playwright covers forms, TOTP setup, recovery-code sign-in, multiple wallets without logout, and the complete create → accept → payout flow on a local EVM. Tests involving passwords or 2FA disable traces and screenshots. The application has no authentication bypasses.
