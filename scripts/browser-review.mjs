@@ -69,8 +69,18 @@ await expect(
     .getByRole("navigation")
     .getByRole("link", { name: "Preferences", exact: true }),
 ).toHaveCount(0);
+await page.locator("#language").selectOption("en");
+await page.getByRole("button", { name: "Light", exact: true }).click();
+await expect(page.locator("html")).toHaveAttribute("lang", "en");
+await expect(page.locator("#language")).toHaveValue("en");
+await page.evaluate(() => document.fonts.ready);
+await page.screenshot({
+  path: "docs/screenshots/preferences-light-en.png",
+  fullPage: true,
+  animations: "disabled",
+});
 await page.locator("#language").selectOption("ru");
-await page.getByRole("button", { name: "Светлая", exact: true }).click();
+await expect(page.locator("html")).toHaveAttribute("lang", "ru");
 await page.screenshot({
   path: "docs/screenshots/preferences-light-ru.png",
   fullPage: true,

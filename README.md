@@ -45,7 +45,7 @@ Wallets authorize blockchain operations and prove address ownership. **They neve
 <table>
 <tr>
 <td><img src="docs/screenshots/working-detail-dark.png" alt="Bounty details and reward panel" /></td>
-<td><img src="docs/screenshots/preferences-light-ru.png" alt="Profile settings in light mode and Russian" /></td>
+<td><img src="docs/screenshots/preferences-light-en.png" alt="Profile settings in light mode" /></td>
 </tr>
 </table>
 
