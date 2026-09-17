@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  displayName String
+  email String? @unique
+  emailVerified Boolean @default(false)
+  image String?
+  username String? @unique
+  twoFactorEnabled Boolean @default(false)
+  accounts AuthAccount[]
+  authSessions AuthSession[]
+  twoFactor TwoFactor?
+  bio         String   @default("")
+  website     String   @default("")
+  locale      String   @default("en")
+  theme       String   @default("dark")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sessions    Session[]
+  wallets     Wallet[]
+  skills      Skill[]
+  created     Bounty[] @relation("Creator")
+  accepted    Bounty[] @relation("Contributor")
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  chainId   Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions  Session[]
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Skill {
+  id       String   @id @default(cuid())
+  name     String   @unique
+  users    User[]
+  bounties Bounty[]
+}
+
+model Bounty {
+  deploymentId String?
+  deployment ChainDeployment? @relation(fields: [deploymentId], references: [id], onDelete: Restrict)
+  isCanonical Boolean @default(true)
+  id            Int      @id @default(autoincrement())
+  chainId       Int?
+  contract      String?
+  onchainId     String?
+  creatorAddress String?
+  workerAddress String?
+  syncedAt      DateTime?
+  transactions ChainTransaction[]
+  title         String
+  description   String
+  reward        String
+  status        String
+  organization  String
+  initial       String
+  color         String
+  age           String
+  category      String
+  creatorLabel  String
+  demoMine      Boolean  @default(false)
+  demoAccepted  Boolean  @default(false)
+  creatorId     String?
+  contributorId String?
+  creator       User?    @relation("Creator", fields: [creatorId], references: [id], onDelete: SetNull)
+  contributor   User?    @relation("Contributor", fields: [contributorId], references: [id], onDelete: SetNull)
+  skills        Skill[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([deploymentId, onchainId])
+  @@index([chainId, contract])
+  @@index([status, category])
+  @@index([creatorId])
+  @@index([contributorId])
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  walletId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([walletId])
+  @@index([expiresAt])
+}
+
+model AuthChallenge {
+  id        String   @id
+  userId String?
+  address   String
+  message   String
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model AuthSession {
+  id String @id
+  userId String
+  token String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuthAccount {
+  id String @id
+  userId String
+  accountId String
+  providerId String
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model AuthVerification {
+  id String @id
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+model AuthAttempt {
+  key String @id
+  count Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model TwoFactor {
+  id String @id
+  userId String @unique
+  secret String
+  backupCodes String
+  verified Boolean @default(false)
+  failedVerificationCount Int @default(0)
+  lockedUntil DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChainTransaction {
+  isCanonical Boolean @default(true)
+  deploymentId String?
+  deployment ChainDeployment? @relation(fields: [deploymentId], references: [id], onDelete: Restrict)
+  id        String   @id @default(cuid())
+  chainId   Int
+  hash      String
+  action    String
+  block     String
+  bountyId  Int
+  bounty    Bounty   @relation(fields: [bountyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([deploymentId, hash])
+  @@index([bountyId])
+}
+
+model ChainDeployment {
+  id String @id @default(cuid())
+  chainId Int
+  contract String
+  blockHash String
+  startBlock String
+  cursor String
+  cursorHash String?
+  bounties Bounty[]
+  transactions ChainTransaction[]
+
+  @@unique([chainId, contract, blockHash])
+}

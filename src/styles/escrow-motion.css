@@ -1,0 +1,65 @@
+.escrow-node {
+  position: relative;
+  --escrow-phase: 0s;
+}
+
+.escrow-node:nth-of-type(2) {
+  --escrow-phase: calc(var(--duration-escrow-pulse) / -3);
+}
+
+.escrow-node:nth-of-type(3) {
+  --escrow-phase: calc(var(--duration-escrow-pulse) / -3 * 2);
+}
+
+.escrow-node > svg {
+  transform-origin: center;
+  animation: escrow-icon-breathe var(--duration-escrow-pulse) ease-in-out
+    infinite;
+  animation-delay: var(--escrow-phase);
+}
+
+.escrow-node::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: var(--border-width) solid var(--escrow-halo-color);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  animation: escrow-halo-breathe var(--duration-escrow-pulse) ease-in-out
+    infinite;
+  animation-delay: var(--escrow-phase);
+}
+
+@keyframes escrow-icon-breathe {
+  0%,
+  65%,
+  100% {
+    transform: scale(1);
+    opacity: var(--escrow-icon-rest-opacity);
+  }
+  30% {
+    transform: scale(var(--escrow-icon-pulse-scale));
+    opacity: 1;
+  }
+}
+
+@keyframes escrow-halo-breathe {
+  0%,
+  65%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(var(--escrow-halo-scale));
+    opacity: var(--escrow-halo-opacity);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escrow-node > svg,
+  .escrow-node::before {
+    animation: none;
+  }
+}

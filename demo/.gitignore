@@ -1,0 +1,7 @@
+/.next*/
+/out/
+/public/locales/
+/next-env.d.ts
+*.tsbuildinfo
+/test-results/
+/playwright-report/

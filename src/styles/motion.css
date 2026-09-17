@@ -1,0 +1,277 @@
+@property --border-orbit {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.site-header {
+  background: color-mix(in srgb, var(--color-canvas) 88%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.bounty-grid {
+  position: relative;
+}
+
+.bounty-grid-item {
+  display: flex;
+  min-width: 0;
+}
+
+.bounty-grid-empty {
+  grid-column: 1 / -1;
+}
+
+.bounty-card {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  transition:
+    background-color var(--duration-hover),
+    border-color var(--duration-hover),
+    box-shadow var(--duration-hover),
+    translate var(--duration-hover) var(--ease-standard);
+}
+
+.bounty-card::before,
+.bounty-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--duration-hover);
+}
+
+.bounty-card::before {
+  inset: calc(-1 * var(--border-width));
+  padding: var(--border-width);
+  z-index: 2;
+  background:
+    radial-gradient(
+      var(--card-border-glow-size) circle at var(--pointer-x, 50%)
+        var(--pointer-y, 0%),
+      var(--color-accent),
+      transparent 75%
+    ),
+    conic-gradient(
+      from var(--border-orbit),
+      transparent 0%,
+      var(--color-border-shimmer-secondary) 14%,
+      transparent 28%,
+      transparent 48%,
+      var(--color-border-shimmer) 65%,
+      transparent 82%
+    );
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: border-orbit var(--duration-border-orbit) linear infinite paused;
+}
+
+.bounty-card::after {
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    var(--card-spotlight-size) circle at var(--pointer-x, 50%)
+      var(--pointer-y, 0%),
+    var(--color-card-spotlight),
+    transparent 80%
+  );
+}
+
+.bounty-card:focus-visible::before,
+.bounty-card:focus-visible::after {
+  opacity: 1;
+}
+
+.bounty-card:focus-visible::before {
+  animation-play-state: running;
+}
+
+.card-arrow {
+  transition:
+    color var(--duration-hover),
+    transform var(--duration-hover) var(--ease-standard);
+}
+
+.card-reward strong,
+.secured {
+  transition: color var(--duration-hover);
+}
+
+.status > span {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.status:not(.status-cancelled) > span {
+  animation: status-breathe var(--duration-status-pulse) ease-in-out infinite;
+}
+
+.status:not(.status-cancelled) > span::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-full);
+  animation: status-ripple var(--duration-status-pulse) ease-out infinite;
+}
+
+.status-in-progress > span,
+.status-in-progress > span::after {
+  animation-delay: -1.1s;
+}
+
+.status-completed > span,
+.status-completed > span::after {
+  animation-duration: var(--duration-status-completed);
+  animation-delay: -2s;
+}
+
+.escrow-line {
+  overflow: hidden;
+  height: 5px;
+  background: linear-gradient(var(--color-border), var(--color-border)) center /
+    100% 1px no-repeat;
+}
+
+.escrow-line::after {
+  top: 1px;
+  left: -5px;
+  width: 4px;
+  height: 3px;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent-glow);
+  animation: escrow-flow var(--duration-escrow-flow) ease-in-out infinite;
+}
+
+.escrow-line:nth-of-type(2)::after {
+  animation-delay: calc(var(--duration-escrow-flow) / -2);
+}
+
+.button-primary {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.button-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    var(--color-button-shine) 48%,
+    transparent 75%
+  );
+  transform: translateX(-130%);
+}
+
+.button-primary:focus-visible::after {
+  animation: button-shine var(--duration-button-shine) var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bounty-card:hover {
+    translate: 0 var(--card-hover-lift);
+    box-shadow: var(--card-hover-shadow);
+  }
+  .bounty-card:hover::before,
+  .bounty-card:hover::after {
+    opacity: 1;
+  }
+  .bounty-card:hover::before {
+    animation-play-state: running;
+  }
+  .bounty-card:hover .card-arrow {
+    transform: translate(2px, -2px);
+  }
+  .bounty-card:hover .card-reward strong,
+  .bounty-card:hover .secured {
+    color: var(--color-accent);
+  }
+  .button-primary:hover:not(:disabled)::after {
+    animation: button-shine var(--duration-button-shine) var(--ease-standard);
+  }
+  .brand:hover .brand-mark span {
+    background: var(--color-accent-hover);
+  }
+}
+
+@keyframes border-orbit {
+  to {
+    --border-orbit: 360deg;
+  }
+}
+
+@keyframes status-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 var(--status-pulse-spread)
+      color-mix(in srgb, currentColor 40%, transparent);
+  }
+  50% {
+    opacity: var(--status-pulse-opacity);
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+@keyframes status-ripple {
+  0%,
+  20% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  35% {
+    opacity: 0.45;
+  }
+  85%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes escrow-flow {
+  0% {
+    left: -5px;
+    opacity: 0;
+  }
+  20%,
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes button-shine {
+  to {
+    transform: translateX(130%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bounty-card::before,
+  .status:not(.status-cancelled) > span,
+  .status:not(.status-cancelled) > span::after,
+  .escrow-line::after,
+  .button-primary::after,
+  .button-primary:hover:not(:disabled)::after,
+  .button-primary:focus-visible::after {
+    animation: none;
+  }
+  .bounty-card:hover {
+    translate: none;
+  }
+  .status > span::after {
+    display: none;
+  }
+}

@@ -1,0 +1,38 @@
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-xs);
+  padding: 3px 7px;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.status > span {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: var(--radius-full);
+}
+.status-open {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+}
+.status-in-progress {
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+.status-completed {
+  color: var(--color-info);
+  background: var(--color-info-bg);
+}
+.status-cancelled {
+  color: var(--color-text-muted);
+  background: var(--color-muted-bg);
+}
+@media (max-width: 590px) {
+  .status {
+    font-size: var(--text-xs);
+  }
+}

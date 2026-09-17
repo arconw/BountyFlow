@@ -1,0 +1,17 @@
+export const interfaceLabels: Record<string, string> = {
+  "All bounties": "all_bounties",
+  Open: "open",
+  "In progress": "in_progress",
+  Completed: "completed",
+  Cancelled: "cancelled",
+  "Created by me": "created_by_me",
+  "Accepted by me": "accepted_by_me",
+  "All skills": "all_skills",
+  Development: "development",
+  Design: "design",
+  Writing: "writing",
+  Research: "research",
+  Bounties: "bounties",
+  "My bounties": "my_bounties",
+  Profile: "profile",
+};

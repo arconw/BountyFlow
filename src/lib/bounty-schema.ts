@@ -1,0 +1,26 @@
+import { z } from "zod";
+
+export const bountySchema = z.object({
+  id: z.number().int().positive(),
+  onchainId: z.string().nullable().optional(),
+  chainId: z.number().nullable().optional(),
+  worker: z.string().nullable().optional(),
+  transactionHash: z.string().nullable().optional(),
+  createdAt: z.string().optional(),
+  title: z.string(),
+  description: z.string(),
+  tags: z.array(z.string()),
+  reward: z.string().regex(/^\d+(\.\d+)?$/),
+  status: z.enum(["Open", "In progress", "Completed", "Cancelled"]),
+  creator: z.string(),
+  contributorName: z.string().optional(),
+  creatorUserId: z.string().nullable().optional(),
+  contributorUserId: z.string().nullable().optional(),
+  organization: z.string(),
+  initial: z.string(),
+  color: z.string(),
+  age: z.string(),
+  category: z.string(),
+  mine: z.boolean().optional(),
+  accepted: z.boolean().optional(),
+});

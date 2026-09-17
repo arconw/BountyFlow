@@ -1,0 +1,103 @@
+{
+  "name": "bountyflow",
+  "version": "1.0.0",
+  "description": "A Next.js bounty marketplace with ETH escrow, email and Google accounts, optional TOTP, and an isolated interactive demo",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test:e2e": "node scripts/test-e2e.mjs",
+    "format": "prettier --write src docs tests scripts config public/locales demo .github *.json *.ts *.md",
+    "format:check": "prettier --check src docs tests scripts config public/locales demo .github *.json *.ts *.md",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:setup": "npm run db:generate && npm run db:deploy && npm run db:seed",
+    "test:unit": "vitest run",
+    "test": "npm run test:unit && npm run test:e2e",
+    "postinstall": "prisma generate",
+    "contract:compile": "node scripts/compile-contract.mjs",
+    "chain:node": "node scripts/chain-node.mjs",
+    "chain:deploy": "npm run contract:compile && tsx scripts/deploy-local.ts",
+    "dev:local": "node scripts/local.mjs",
+    "review:local": "node scripts/local.mjs --review",
+    "chain:deploy:sepolia": "npm run contract:compile && node scripts/deploy-sepolia.mjs",
+    "demo:seed": "npm run chain:deploy && npm run db:seed",
+    "account:local": "tsx scripts/create-review-account.ts",
+    "demo:build": "node scripts/build-demo.mjs",
+    "demo:test": "playwright test --config demo/playwright.config.ts"
+  },
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "web3",
+    "ethereum",
+    "wagmi",
+    "viem",
+    "prisma",
+    "sqlite",
+    "bounty",
+    "portfolio"
+  ],
+  "author": "Arcon",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@better-auth/prisma-adapter": "^1.7.5",
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource/geist-mono": "^5.3.0",
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@tanstack/react-query": "^5.102.8",
+    "@walletconnect/ethereum-provider": "^2.25.0",
+    "better-auth": "1.7.5",
+    "lucide-react": "^1.46.0",
+    "motion": "^13.2.0",
+    "next": "^16.3.5",
+    "next-intl": "^4.14.5",
+    "next-themes": "^0.4.6",
+    "nodemailer": "^10.0.10",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-qr-code": "^2.2.0",
+    "viem": "^2.56.5",
+    "wagmi": "^3.7.7",
+    "zod": "^4.6.5",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.1",
+    "@types/nodemailer": "^8.0.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "hardhat": "^3.16.0",
+    "prettier": "^3.9.6",
+    "prisma": "^7.10.0",
+    "solc": "^0.8.37",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  },
+  "private": true,
+  "overrides": {
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.2"
+    },
+    "mysql2": "3.24.4",
+    "tmp": "0.2.7"
+  },
+  "homepage": "https://arconw.github.io/BountyFlow/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arconw/BountyFlow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arconw/BountyFlow/issues"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}

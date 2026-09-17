@@ -1,0 +1,159 @@
+:root {
+  color-scheme: dark;
+  --color-canvas: #0b0d10;
+  --color-surface: #12151a;
+  --color-elevated: #191d23;
+  --color-hover: #171c22;
+  --color-border: #282d35;
+  --color-border-subtle: #20252c;
+  --color-border-hover: #424b54;
+  --color-text: #f1f3f5;
+  --color-text-secondary: #b6bdc7;
+  --color-text-muted: #929aa7;
+  --color-accent: #a8e6cf;
+  --color-accent-hover: #c0f0df;
+  --color-on-accent: #14271f;
+  --color-accent-border: #345449;
+  --color-accent-subtle: #182b25;
+  --color-success: #8ed4b5;
+  --color-success-bg: #142820;
+  --color-warning: #ddbd7b;
+  --color-warning-bg: #2b261c;
+  --color-info: #a2b8ec;
+  --color-info-bg: #1e263a;
+  --color-danger: #e5a0a0;
+  --color-danger-bg: #2f2024;
+  --color-muted-bg: #24272e;
+  --color-overlay: #030507b8;
+  --color-avatar-mint: #78cbb0;
+  --color-avatar-blue: #9bb9de;
+  --color-avatar-sand: #dfcba7;
+  --color-avatar-rose: #dba6a4;
+  --color-avatar-lavender: #b9afe5;
+  --color-wallet-orange: #edb07a;
+  --color-wallet-blue: #a7b5f1;
+  --color-wallet-cyan: #96ccf0;
+  --font-sans:
+    "Manrope Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --type-scale: 1.15;
+  --text-micro: calc(0.5625rem * var(--type-scale));
+  --text-caption: calc(0.625rem * var(--type-scale));
+  --text-stat: calc(1.8125rem * var(--type-scale));
+  --text-page-title: calc(2.25rem * var(--type-scale));
+  --text-mobile-display: calc(2.5rem * var(--type-scale));
+  --text-reward: calc(2.75rem * var(--type-scale));
+  --text-xs: calc(0.6875rem * var(--type-scale));
+  --text-sm: calc(0.75rem * var(--type-scale));
+  --text-base: calc(0.8125rem * var(--type-scale));
+  --text-md: calc(0.875rem * var(--type-scale));
+  --text-lg: calc(1rem * var(--type-scale));
+  --text-xl: calc(1.125rem * var(--type-scale));
+  --text-2xl: calc(1.5rem * var(--type-scale));
+  --text-3xl: calc(2rem * var(--type-scale));
+  --text-display: clamp(
+    calc(2.4rem * var(--type-scale)),
+    calc(3.4vw * var(--type-scale)),
+    calc(3rem * var(--type-scale))
+  );
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.13;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+  --tracking-tight: -0.045em;
+  --tracking-heading: -0.025em;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+  --border-width: 1px;
+  --container-width: 1184px;
+  --header-width: 1400px;
+  --page-gutter: 40px;
+  --header-height: 76px;
+  --control-height: 38px;
+  --card-padding: 24px;
+  --grid-gap: 18px;
+  --aside-width: 344px;
+  --modal-width: 440px;
+  --shadow-modal: 0 24px 100px #0008;
+  --shadow-float: 0 4px 20px #0003;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-hover: 320ms;
+  --duration-navigation: 360ms;
+  --duration-border-orbit: 4s;
+  --duration-status-pulse: 3.2s;
+  --duration-status-completed: 5.2s;
+  --duration-escrow-flow: 3.6s;
+  --duration-escrow-pulse: 4.8s;
+  --escrow-icon-pulse-scale: 1.09;
+  --escrow-icon-rest-opacity: 0.78;
+  --escrow-halo-scale: 1.12;
+  --escrow-halo-opacity: 0.45;
+  --escrow-halo-color: var(--color-accent-border);
+  --duration-button-shine: 700ms;
+  --color-button-shine: #ffffff40;
+  --color-accent-glow: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  --color-border-shimmer: color-mix(
+    in srgb,
+    var(--color-accent) 75%,
+    transparent
+  );
+  --color-border-shimmer-secondary: color-mix(
+    in srgb,
+    var(--color-info) 50%,
+    transparent
+  );
+  --color-card-spotlight: color-mix(
+    in srgb,
+    var(--color-accent) 6%,
+    transparent
+  );
+  --card-spotlight-size: 360px;
+  --card-border-glow-size: 200px;
+  --card-hover-lift: -3px;
+  --card-hover-shadow: 0 14px 38px #0003;
+  --nav-line-height: 2px;
+  --nav-glow-radius: 12px;
+  --status-pulse-opacity: 0.5;
+  --status-pulse-spread: 5px;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --z-header: 20;
+  --z-mobile-action: 25;
+  --z-skip-link: 50;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --page-gutter: 24px;
+    --header-height: 112px;
+    --card-padding: 21px;
+    --grid-gap: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --page-gutter: 18px;
+  }
+}
